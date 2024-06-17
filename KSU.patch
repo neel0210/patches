@@ -1,7 +1,7 @@
 diff --git a/arch/arm64/configs/atoll_defconfig b/arch/arm64/configs/atoll_defconfig
-index c791e69cecb3..4a7d47291d0f 100644
+index ea86a89181b2..9f5731259eb2 100644
 --- a/arch/arm64/configs/atoll_defconfig
-+ b/arch/arm64/configs/atoll_defconfig
++++ b/arch/arm64/configs/atoll_defconfig
 @@ -44,6 +44,12 @@ CONFIG_THREAD_INFO_IN_TASK=y
  CONFIG_PAGE_OWNER=n
  CONFIG_DEBUG_FS=n
@@ -18,7 +18,7 @@ index c791e69cecb3..4a7d47291d0f 100644
 diff --git a/drivers/input/input.c b/drivers/input/input.c
 index 79a9aafa713d..542e125a40c0 100644
 --- a/drivers/input/input.c
-+ b/drivers/input/input.c
++++ b/drivers/input/input.c
 @@ -381,10 +381,19 @@ static int input_get_disposition(struct input_dev *dev,
  extern void __attribute__((weak)) oppo_sync_saupwk_event(unsigned int , unsigned int , int);
  #endif /* OPLUS_FEATURE_SAUPWK */
@@ -40,9 +40,9 @@ index 79a9aafa713d..542e125a40c0 100644
  #ifdef OPLUS_FEATURE_SAUPWK
  	if(oppo_sync_saupwk_event)
 diff --git a/fs/exec.c b/fs/exec.c
-index b020beee255c..21675f7e768c 100644
+index b020beee255c..74c385ad57fe 100644
 --- a/fs/exec.c
-+ b/fs/exec.c
++++ b/fs/exec.c
 @@ -1721,11 +1721,24 @@ extern int oplus_exec_block(struct file *file);
  /*
   * sys_execve() executes a new program.
@@ -71,7 +71,7 @@ index b020beee255c..21675f7e768c 100644
 diff --git a/fs/namespace.c b/fs/namespace.c
 index e2174c1bc5a1..ffded5f242f7 100644
 --- a/fs/namespace.c
-+ b/fs/namespace.c
++++ b/fs/namespace.c
 @@ -1746,6 +1746,39 @@ static inline bool may_mandlock(void)
  }
  #endif
@@ -113,9 +113,9 @@ index e2174c1bc5a1..ffded5f242f7 100644
   * Now umount can handle mount points as well as block devices.
   * This is important for filesystems which use unnamed block devices.
 diff --git a/fs/open.c b/fs/open.c
-index 0628bd1ae2ad..883f46ee4483 100644
+index 0628bd1ae2ad..9b24e93ce135 100644
 --- a/fs/open.c
-+ b/fs/open.c
++++ b/fs/open.c
 @@ -354,6 +354,10 @@ SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
  	return error;
  }
@@ -127,12 +127,10 @@ index 0628bd1ae2ad..883f46ee4483 100644
  /*
   * access() needs to use the real uid/gid, not the effective uid/gid.
   * We do this by temporarily clearing all FS-related capabilities and
-@@ -368,7 +372,11 @@ SYSCALL_DEFINE3(faccessat, int, dfd, const char __user *, filename, int, mode)
- 	struct vfsmount *mnt;
+@@ -369,6 +373,10 @@ SYSCALL_DEFINE3(faccessat, int, dfd, const char __user *, filename, int, mode)
  	int res;
  	unsigned int lookup_flags = LOOKUP_FOLLOW;
--
-+
+ 
 +	#ifdef CONFIG_KSU
 +	ksu_handle_faccessat(&dfd, &filename, &mode, NULL);
 +	#endif
@@ -143,7 +141,7 @@ index 0628bd1ae2ad..883f46ee4483 100644
 diff --git a/fs/read_write.c b/fs/read_write.c
 index ef5d625a3eb5..a60f08e6d48c 100644
 --- a/fs/read_write.c
-+ b/fs/read_write.c
++++ b/fs/read_write.c
 @@ -438,9 +438,18 @@ ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
  }
  EXPORT_SYMBOL(kernel_read);
@@ -164,9 +162,9 @@ index ef5d625a3eb5..a60f08e6d48c 100644
  	if (!(file->f_mode & FMODE_READ))
  		return -EBADF;
 diff --git a/fs/stat.c b/fs/stat.c
-index 0fda4b6b8fb2..49418be2ee55 100644
+index 0fda4b6b8fb2..8ce03a9d5eb2 100644
 --- a/fs/stat.c
-+ b/fs/stat.c
++++ b/fs/stat.c
 @@ -148,6 +148,10 @@ int vfs_statx_fd(unsigned int fd, struct kstat *stat,
  }
  EXPORT_SYMBOL(vfs_statx_fd);
@@ -178,14 +176,14 @@ index 0fda4b6b8fb2..49418be2ee55 100644
  /**
   * vfs_statx - Get basic and extra attributes by filename
   * @dfd: A file descriptor representing the base dir for a relative filename
-@@ -169,6 +173,10 @@ int vfs_statx(int dfd, const char __user *filename, int flags,
- 	struct path path;
+@@ -170,6 +174,10 @@ int vfs_statx(int dfd, const char __user *filename, int flags,
  	int error = -EINVAL;
  	unsigned int lookup_flags = LOOKUP_FOLLOW | LOOKUP_AUTOMOUNT;
-+
+ 
 +	#ifdef CONFIG_KSU
 +	ksu_handle_stat(&dfd, &filename, &flags);
 +	#endif
- 
++
  	if ((flags & ~(AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT |
  		       AT_EMPTY_PATH | KSTAT_QUERY_FLAGS)) != 0)
+ 		return -EINVAL;
