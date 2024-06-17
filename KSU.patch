@@ -1,16 +1,14 @@
 diff --git a/arch/arm64/configs/atoll_defconfig b/arch/arm64/configs/atoll_defconfig
-index ea86a89181b2..9f5731259eb2 100644
+index ea86a89181b2..77334aafbbfc 100644
 --- a/arch/arm64/configs/atoll_defconfig
 +++ b/arch/arm64/configs/atoll_defconfig
-@@ -44,6 +44,12 @@ CONFIG_THREAD_INFO_IN_TASK=y
+@@ -44,6 +44,10 @@ CONFIG_THREAD_INFO_IN_TASK=y
  CONFIG_PAGE_OWNER=n
  CONFIG_DEBUG_FS=n
  
 +#KSU
 +CONFIG_KSU=y
 +CONFIG_KPROBES=y
-+CONFIG_HAVE_KPROBES=y
-+CONFIG_KPROBE_EVENTS=y
 +
  #
  # General setup
