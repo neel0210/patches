@@ -1,7 +1,7 @@
 diff --git a/arch/arm64/configs/atoll_defconfig b/arch/arm64/configs/atoll_defconfig
 index c791e69cecb3..4a7d47291d0f 100644
 --- a/arch/arm64/configs/atoll_defconfig
-+++ b/arch/arm64/configs/atoll_defconfig
++ b/arch/arm64/configs/atoll_defconfig
 @@ -44,6 +44,12 @@ CONFIG_THREAD_INFO_IN_TASK=y
  CONFIG_PAGE_OWNER=n
  CONFIG_DEBUG_FS=n
@@ -18,7 +18,7 @@ index c791e69cecb3..4a7d47291d0f 100644
 diff --git a/drivers/input/input.c b/drivers/input/input.c
 index 79a9aafa713d..542e125a40c0 100644
 --- a/drivers/input/input.c
-+++ b/drivers/input/input.c
++ b/drivers/input/input.c
 @@ -381,10 +381,19 @@ static int input_get_disposition(struct input_dev *dev,
  extern void __attribute__((weak)) oppo_sync_saupwk_event(unsigned int , unsigned int , int);
  #endif /* OPLUS_FEATURE_SAUPWK */
@@ -42,12 +42,12 @@ index 79a9aafa713d..542e125a40c0 100644
 diff --git a/fs/exec.c b/fs/exec.c
 index b020beee255c..21675f7e768c 100644
 --- a/fs/exec.c
-+++ b/fs/exec.c
++ b/fs/exec.c
 @@ -1721,11 +1721,24 @@ extern int oplus_exec_block(struct file *file);
  /*
   * sys_execve() executes a new program.
   */
-++#ifdef CONFIG_KSU
++#ifdef CONFIG_KSU
 +extern bool ksu_execveat_hook __read_mostly;
 +extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr, void *argv,
 +			void *envp, int *flags);
@@ -71,7 +71,7 @@ index b020beee255c..21675f7e768c 100644
 diff --git a/fs/namespace.c b/fs/namespace.c
 index e2174c1bc5a1..ffded5f242f7 100644
 --- a/fs/namespace.c
-+++ b/fs/namespace.c
++ b/fs/namespace.c
 @@ -1746,6 +1746,39 @@ static inline bool may_mandlock(void)
  }
  #endif
@@ -115,7 +115,7 @@ index e2174c1bc5a1..ffded5f242f7 100644
 diff --git a/fs/open.c b/fs/open.c
 index 0628bd1ae2ad..883f46ee4483 100644
 --- a/fs/open.c
-+++ b/fs/open.c
++ b/fs/open.c
 @@ -354,6 +354,10 @@ SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
  	return error;
  }
@@ -143,7 +143,7 @@ index 0628bd1ae2ad..883f46ee4483 100644
 diff --git a/fs/read_write.c b/fs/read_write.c
 index ef5d625a3eb5..a60f08e6d48c 100644
 --- a/fs/read_write.c
-+++ b/fs/read_write.c
++ b/fs/read_write.c
 @@ -438,9 +438,18 @@ ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
  }
  EXPORT_SYMBOL(kernel_read);
@@ -166,7 +166,7 @@ index ef5d625a3eb5..a60f08e6d48c 100644
 diff --git a/fs/stat.c b/fs/stat.c
 index 0fda4b6b8fb2..49418be2ee55 100644
 --- a/fs/stat.c
-+++ b/fs/stat.c
++ b/fs/stat.c
 @@ -148,6 +148,10 @@ int vfs_statx_fd(unsigned int fd, struct kstat *stat,
  }
  EXPORT_SYMBOL(vfs_statx_fd);
